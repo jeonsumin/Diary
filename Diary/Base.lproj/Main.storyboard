@@ -96,7 +96,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DiaryCell" id="UVj-8u-gVS" customClass="DirayCell" customModule="Diary" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DiaryCell" id="UVj-8u-gVS" customClass="DiaryCell" customModule="Diary" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="180" height="200"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="zlV-9N-6Yy">
@@ -127,6 +127,10 @@
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="180" height="200"/>
+                                        <connections>
+                                            <outlet property="dateLb" destination="hQj-Os-e7Z" id="Axx-3g-EZS"/>
+                                            <outlet property="titleLb" destination="zLO-KP-DM2" id="MIy-ra-tJJ"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -147,6 +151,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="collectionView" destination="qTr-4L-6D9" id="CcU-Ft-88L"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -223,8 +230,18 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="일기 작성" id="ttU-LH-ril">
-                        <barButtonItem key="rightBarButtonItem" title="등록" id="2M5-W5-VDE"/>
+                        <barButtonItem key="rightBarButtonItem" title="등록" id="2M5-W5-VDE">
+                            <connections>
+                                <action selector="tapConfirmBtn:" destination="LGm-nu-pAt" id="a1K-md-HWd"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="confirmBtn" destination="2M5-W5-VDE" id="20y-6X-LAR"/>
+                        <outlet property="contentsTf" destination="xp3-0C-zuh" id="Yc0-y0-tlJ"/>
+                        <outlet property="dateTf" destination="LeN-5n-D07" id="m0n-ag-a7Z"/>
+                        <outlet property="titleTf" destination="dXg-5I-ocj" id="lvJ-AF-FPE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2pf-Eh-aNn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -236,6 +253,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="LBd-Mv-ldD" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iVQ-hM-6gA">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>

@@ -58,7 +58,7 @@ class WriteDiaryViewController: UIViewController {
     private func configureDatePicker(){
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
-        //데이트 텍스트 필드 tapp 할 시 키보드 대신 데이트픽커가 호출 될수 있도록 타겟 설정 
+        //데이트 텍스트 필드 tapp 할 시 키보드 대신 데이트픽커가 호출 될수 있도록 타겟 설정
         datePicker.addTarget(self, action: #selector(datePickerValueDidChange(_:)), for: .valueChanged)
         dateTf.inputView = datePicker
     }

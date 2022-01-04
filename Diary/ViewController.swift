@@ -120,3 +120,20 @@ extension ViewController: WriteDiaryViewDelegate {
         collectionView.reloadData()
     }
 }
+
+extension ViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let viewController = storyboard?.instantiateViewController(identifier: "DiaryDetailViewController") as? DiaryDetailViewController else { return }
+        let diary = diaryList[indexPath.row]
+        viewController.diary = diary
+        viewController.indexPath = indexPath
+        viewController.delegate = self
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+extension ViewController: DiaryDetailViewDelegate {
+    func didSelectDelete(indexPath: IndexPath) {
+        diaryList.remove(at: indexPath.row)
+        collectionView.deleteItems(at: [indexPath])
+    }
+}

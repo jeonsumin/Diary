@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum DiaryEditorMode {
+    case new
+    case edit(IndexPath, Diary)
+}
+
 //작성화면에서 리스트 화면으로 데이터를 전달하기위한 프로토콜 정의
 protocol WriteDiaryViewDelegate:AnyObject {
     func didSelectRegister(diary: Diary)
@@ -22,6 +27,7 @@ class WriteDiaryViewController: UIViewController {
     
     private let datePicker = UIDatePicker()
     private var diaryDate: Date?
+    var diaryEditorMode: DiaryEditorMode = .new
     
     //정의 된 프로토콜 등록
     weak var delegate: WriteDiaryViewDelegate?
@@ -32,6 +38,7 @@ class WriteDiaryViewController: UIViewController {
         configureContentsTextView()
         configureDatePicker()
         configureInputField()
+        configureEditorMode()
         confirmBtn.isEnabled = false
     }
     
@@ -42,9 +49,21 @@ class WriteDiaryViewController: UIViewController {
         guard let date = diaryDate else { return }
         
         let diary = Diary(title: title, contents: contents, date: date, isStar: false)
+        
+        switch diaryEditorMode {
+        case .new:
+            delegate?.didSelectRegister(diary: diary)
+        case .edit(let indexPath, _):
+            NotificationCenter.default.post(name: Notification.Name("editDiary"),
+                                            object: diary,
+                                            userInfo: ["indexPath.row":indexPath.row])
+            
+        }
+        
         //프로토콜 델리게이트를 통해 데이터 전달
         delegate?.didSelectRegister(diary: diary)
         self.navigationController?.popViewController(animated: true)
+        
     }
     
     //MARK: Function
@@ -70,6 +89,26 @@ class WriteDiaryViewController: UIViewController {
         dateTf.addTarget(self, action: #selector(dateTextFieldDidChange(_:)), for: .editingChanged)
     }
     
+    private func configureEditorMode(){
+        switch diaryEditorMode {
+        case .edit(_, let diary):
+            titleTf.text = diary.title
+            contentsTf.text = diary.contents
+            dateTf.text = dateToString(date: diary.date)
+            diaryDate = diary.date
+            confirmBtn.title = "수정"
+        default:
+            break
+        }
+    }
+    //날짜 포멧 설정 메소드
+    private func dateToString(date: Date) -> String {
+        let formmatter = DateFormatter()
+        formmatter.dateFormat = "yy년 MM월 dd일(EEEEE)"
+        formmatter.locale = Locale(identifier: "ko_KR")
+        return formmatter.string(from: date)
+    }
+    
     @objc private func datePickerValueDidChange(_ datePicker: UIDatePicker) {
         let formater = DateFormatter()
         formater.dateFormat = "yyyy 년 MM 월 dd 일 (EEEEE)"
@@ -92,6 +131,8 @@ class WriteDiaryViewController: UIViewController {
         && !(dateTf.text?.isEmpty ?? true )
         && !contentsTf.text.isEmpty
     }
+    
+    
     
     //MARK: Overried
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -23,6 +23,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         configureCollectionView()
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(editDiaryNotification(_:)),
+                                               name: Notification.Name("editDiary"),
+                                               object: nil)
     }
     
     //MARK: Function
@@ -73,6 +77,16 @@ class ViewController: UIViewController {
         formmatter.dateFormat = "yy년 MM월 dd일(EEEEE)"
         formmatter.locale = Locale(identifier: "ko_KR")
         return formmatter.string(from: date)
+    }
+    
+    @objc func editDiaryNotification(_ notification: Notification){
+        guard let diary = notification.object as? Diary else { return }
+        guard let row = notification.userInfo?["indexPath.row"] as? Int else { return }
+        diaryList[row] = diary
+        diaryList = diaryList.sorted(by: {
+            $0.date.compare($1.date) == .orderedDescending
+        })
+        collectionView.reloadData()
     }
     
     //MARK: Override

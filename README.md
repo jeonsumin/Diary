@@ -13,6 +13,7 @@
 - NotificationCenter
 
 ### DEMO
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/51107183/148174325-64f19279-6507-4b18-a3fd-b71d47d2d510.gif)
 
 
 ## 배운 내용 
@@ -62,3 +63,10 @@
 
 <img width="851" alt="스크린샷 2022-01-03 오전 10 43 57" src="https://user-images.githubusercontent.com/51107183/147894825-ed2e4a51-c499-40d4-be74-bce29453bd72.png">
 
+#### NotificationCenter 
+> 등록된 이벤트가 발생하면 해당이벤트들에 대한 행동을 취하는 것 
+> 
+>  앱내에서 아무곳에서나 이벤트를 등록하면 아무곳에서나 해당 이벤트를 받아 사용할 수 있는 장점이 있다. 
+
+- 각 화면 간의 Notification 관계 
+<img width="1492" alt="스크린샷 2022-01-05 오후 2 36 43" src="https://user-images.githubusercontent.com/51107183/148166388-08b4ee5c-cb5f-4992-98ee-3376bcc45f93.png">

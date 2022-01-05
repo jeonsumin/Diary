@@ -52,16 +52,16 @@ class WriteDiaryViewController: UIViewController {
         
         switch diaryEditorMode {
         case .new:
+            //프로토콜 델리게이트를 통해 데이터 전달
             delegate?.didSelectRegister(diary: diary)
-        case .edit(let indexPath, _):
+        case let .edit(indexPath, diary):
+            let diary = Diary(title: title, contents: contents, date: date, isStar: diary.isStar)
             NotificationCenter.default.post(name: Notification.Name("editDiary"),
                                             object: diary,
                                             userInfo: ["indexPath.row":indexPath.row])
             
         }
         
-        //프로토콜 델리게이트를 통해 데이터 전달
-        delegate?.didSelectRegister(diary: diary)
         self.navigationController?.popViewController(animated: true)
         
     }

@@ -27,6 +27,14 @@ class ViewController: UIViewController {
                                                selector: #selector(editDiaryNotification(_:)),
                                                name: Notification.Name("editDiary"),
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(starDiaryNotification(_:)),
+                                               name: Notification.Name("starDiary"),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(deleteDiaryNotification(_:)),
+                                               name: Notification.Name("deleteDiary"),
+                                               object: nil)
     }
     
     //MARK: Function
@@ -89,6 +97,19 @@ class ViewController: UIViewController {
         collectionView.reloadData()
     }
     
+    @objc func starDiaryNotification(_ notification: Notification){
+        guard let startDiary = notification.object as? [String:Any] else { return }
+        guard let isStar = startDiary["isStar"] as? Bool else { return }
+        guard let indexPath = startDiary["indexPath"] as? IndexPath else { return }
+        diaryList[indexPath.row].isStar = isStar
+    }
+    
+    @objc func deleteDiaryNotification(_ notification: Notification){
+        guard let indexPath = notification.object as? IndexPath else { return }
+        diaryList.remove(at: indexPath.row)
+        collectionView.deleteItems(at: [indexPath])
+        
+    }
     //MARK: Override
     // 작성 화면에서 작성된 데이터를 받아오기 위해 delegate 채택
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -141,13 +162,16 @@ extension ViewController: UICollectionViewDelegate {
         let diary = diaryList[indexPath.row]
         viewController.diary = diary
         viewController.indexPath = indexPath
-        viewController.delegate = self
+//        viewController.delegate = self
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
-extension ViewController: DiaryDetailViewDelegate {
-    func didSelectDelete(indexPath: IndexPath) {
-        diaryList.remove(at: indexPath.row)
-        collectionView.deleteItems(at: [indexPath])
-    }
-}
+//extension ViewController: DiaryDetailViewDelegate {
+//    func didSelectDelete(indexPath: IndexPath) {
+//        diaryList.remove(at: indexPath.row)
+//        collectionView.deleteItems(at: [indexPath])
+//    }
+//    func didSelectStar(indexPath: IndexPath, isStar: Bool) {
+//        diaryList[indexPath.row].isStar = isStar
+//    }
+//}

@@ -7,23 +7,26 @@
 
 import UIKit
 
-protocol DiaryDetailViewDelegate: AnyObject {
-    func didSelectDelete(indexPath:IndexPath)
-}
+//protocol DiaryDetailViewDelegate: AnyObject {
+    //    func didSelectDelete(indexPath:IndexPath)
+    //    func didSelectStar(indexPath:IndexPath, isStar:Bool)
+//}
 
 class DiaryDetailViewController: UIViewController {
-
+    
     @IBOutlet var contentsTextView: UITextView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var dateLabel: UILabel!
     
     var diary: Diary?
     var indexPath: IndexPath?
-    var delegate: DiaryDetailViewDelegate?
+//    var delegate: DiaryDetailViewDelegate?
+    var starButton: UIBarButtonItem?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureView()
         
     }
@@ -44,8 +47,10 @@ class DiaryDetailViewController: UIViewController {
     
     @IBAction func tapDeleteButton(_ sender: UIButton) {
         guard let indexPath = indexPath else { return }
-
-        delegate?.didSelectDelete(indexPath: indexPath)
+        
+        NotificationCenter.default.post(name: Notification.Name("deleteDiary"), object: indexPath,userInfo: nil)
+        
+        //        delegate?.didSelectDelete(indexPath: indexPath)
         navigationController?.popViewController(animated: true)
     }
     
@@ -57,11 +62,39 @@ class DiaryDetailViewController: UIViewController {
         configureView()
     }
     
+    @objc func tapStarButton(){
+        guard let isStar = diary?.isStar else { return }
+        guard let indexPath = indexPath else { return }
+        
+        if isStar {
+            starButton?.image = UIImage(systemName: "star")
+        }else {
+            starButton?.image = UIImage(systemName: "star.fill")
+        }
+        diary?.isStar = !isStar
+        //        프로토콜 델리게이트 방식
+        //        delegate?.didSelectStar(indexPath: indexPath, isStar: diary?.isStar ?? false )
+        NotificationCenter.default.post(name: Notification.Name("starDiary"),
+                                        object: [
+                                            "diary":diary,
+                                            "isStar": diary?.isStar ?? false,
+                                            "indexPath":indexPath
+                                        ],
+                                        userInfo: nil)
+    }
+    
     private func configureView(){
         guard let diary = diary else { return }
         titleLabel.text = diary.title
+        
         contentsTextView.text = diary.contents
+        
         dateLabel.text = dateToString(date: diary.date)
+        
+        starButton = UIBarButtonItem(image: nil, style: .plain, target: self, action: #selector(tapStarButton))
+        starButton?.image = diary.isStar ? UIImage(systemName: "star.fill") : UIImage(systemName: "star")
+        starButton?.tintColor = .orange
+        navigationItem.rightBarButtonItem = starButton
     }
     
     

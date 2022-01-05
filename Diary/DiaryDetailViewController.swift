@@ -29,6 +29,10 @@ class DiaryDetailViewController: UIViewController {
         
         configureView()
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(starDiaryNotification(_:)),
+                                               name: NSNotification.Name("starDiary"),
+                                               object: nil)
     }
     
     @IBAction func tapEditButton(_ sender: UIButton) {
@@ -46,9 +50,11 @@ class DiaryDetailViewController: UIViewController {
     }
     
     @IBAction func tapDeleteButton(_ sender: UIButton) {
-        guard let indexPath = indexPath else { return }
-        
-        NotificationCenter.default.post(name: Notification.Name("deleteDiary"), object: indexPath,userInfo: nil)
+//        guard let indexPath = indexPath else { return }
+        guard let uuidStirng = diary?.uuidString else { return }
+        NotificationCenter.default.post(name: Notification.Name("deleteDiary"),
+                                        object: uuidStirng,
+                                        userInfo: nil)
         
         //        delegate?.didSelectDelete(indexPath: indexPath)
         navigationController?.popViewController(animated: true)
@@ -57,15 +63,14 @@ class DiaryDetailViewController: UIViewController {
     //수정된 다이어리 객체를 가져온다
     @objc func editDiaryNotification(_ notification: Notification){
         guard let diary = notification.object as? Diary else { return }
-        guard let row = notification.userInfo?["indexPath.row"] as? Int else { return }
+//        guard let row = notification.userInfo?["indexPath.row"] as? Int else { return }
         self.diary = diary
         configureView()
     }
     
     @objc func tapStarButton(){
         guard let isStar = diary?.isStar else { return }
-        guard let indexPath = indexPath else { return }
-        
+//        guard let indexPath = indexPath else { return }
         if isStar {
             starButton?.image = UIImage(systemName: "star")
         }else {
@@ -78,9 +83,19 @@ class DiaryDetailViewController: UIViewController {
                                         object: [
                                             "diary":diary,
                                             "isStar": diary?.isStar ?? false,
-                                            "indexPath":indexPath
+                                            "uuidString": diary?.uuidString
                                         ],
                                         userInfo: nil)
+    }
+    @objc func starDiaryNotification(_ notification : Notification){
+        guard let starDiary = notification.object as? [String: Any] else { return }
+        guard let isStar = starDiary["isStar"] as? Bool else { return }
+        guard let uuidString = starDiary["uuidString"] as? String else { return }
+        guard let diary = diary else { return }
+        if diary.uuidString == uuidString {
+            self.diary?.isStar = isStar
+            configureView()
+        }
     }
     
     private func configureView(){

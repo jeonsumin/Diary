@@ -48,17 +48,25 @@ class WriteDiaryViewController: UIViewController {
         guard let contents = contentsTf.text else { return }
         guard let date = diaryDate else { return }
         
-        let diary = Diary(title: title, contents: contents, date: date, isStar: false)
+        let diary = Diary(uuidString: UUID().uuidString,
+                          title: title,
+                          contents: contents,
+                          date: date,
+                          isStar: false)
         
         switch diaryEditorMode {
         case .new:
             //프로토콜 델리게이트를 통해 데이터 전달
             delegate?.didSelectRegister(diary: diary)
         case let .edit(indexPath, diary):
-            let diary = Diary(title: title, contents: contents, date: date, isStar: diary.isStar)
+            let diary = Diary(uuidString: diary.uuidString,
+                              title: title,
+                              contents: contents,
+                              date: date,
+                              isStar: diary.isStar)
             NotificationCenter.default.post(name: Notification.Name("editDiary"),
                                             object: diary,
-                                            userInfo: ["indexPath.row":indexPath.row])
+                                            userInfo: nil)
             
         }
         

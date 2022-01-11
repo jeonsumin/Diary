@@ -64,6 +64,7 @@ class WriteDiaryViewController: UIViewController {
                               contents: contents,
                               date: date,
                               isStar: diary.isStar)
+            //notificationCenter.default.post로 노티피케이션 등록
             NotificationCenter.default.post(name: Notification.Name("editDiary"),
                                             object: diary,
                                             userInfo: nil)

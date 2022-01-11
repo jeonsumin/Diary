@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    //MARK: Properties
+    //MARK: - Properties
     @IBOutlet var collectionView: UICollectionView!
     
     private var diaryList = [Diary](){
@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         }
     }
     
-    //MARK: Life Cycle
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
@@ -37,7 +37,7 @@ class ViewController: UIViewController {
                                                object: nil)
     }
     
-    //MARK: Function
+    //MARK: - Function
     private func configureCollectionView(){
         
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
@@ -93,17 +93,22 @@ class ViewController: UIViewController {
         return formmatter.string(from: date)
     }
     
+    // 수정된 일기 데이터를 노티에서 가져오기
     @objc func editDiaryNotification(_ notification: Notification){
+        //노티 객체를 Diary로 캐스팅하여 초기화
         guard let diary = notification.object as? Diary else { return }
+//기존 일반적인 노티 UserInfo에서 가져오는 코드
 //        guard let row = notification.userInfo?["indexPath.row"] as? Int else { return }
+// Index Out Of Rang 에러 처리를 위해 일기의 id 값을 지정하여 Index 설정
         guard let index = diaryList.firstIndex(where: { $0.uuidString == diary.uuidString }) else { return }
+        //일기 배열에 index 값을 notification에 있는 값으로 치환
         diaryList[index] = diary
         diaryList = diaryList.sorted(by: {
             $0.date.compare($1.date) == .orderedDescending
         })
         collectionView.reloadData()
     }
-    
+    // 즐겨찾기 일기 데이터를 노티에서 가져오기
     @objc func starDiaryNotification(_ notification: Notification){
         guard let startDiary = notification.object as? [String:Any] else { return }
         guard let isStar = startDiary["isStar"] as? Bool else { return }
@@ -113,6 +118,7 @@ class ViewController: UIViewController {
         diaryList[index].isStar = isStar
     }
     
+    //삭제될 일기 데이터를 노티에서 가져오기
     @objc func deleteDiaryNotification(_ notification: Notification){
 //        guard let indexPath = notification.object as? IndexPath else { return }
         guard let uuidString = notification.object as? String else { return }

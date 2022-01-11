@@ -18,7 +18,7 @@ class StarViewController: UIViewController {
         super.viewDidLoad()
         configureCollectionView()
         loadStarDiaryList()
-        
+        //notificationCenter.default.addObserver로 동록 된 로티를 옵저버를 통해서 구독 
         NotificationCenter.default.addObserver(self, selector: #selector(editDiaryNotification(_:)), name: Notification.Name("editDiary"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(starDiaryNotification(_:)), name: Notification.Name("starDiary"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(deleteDiaryNotification(_:)), name: Notification.Name("deleteDiary"), object: nil)
